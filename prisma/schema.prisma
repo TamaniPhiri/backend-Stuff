@@ -12,7 +12,7 @@ datasource db {
 
 model Student{
   id Int @id @default(autoincrement())
-  regNo Int @unique
+  regNo BigInt @unique
   password String
   results Results[]
 }
@@ -26,7 +26,7 @@ model Lecture{
 model Results{
   id Int @id @default(autoincrement())
   student Student @relation(fields: [studentId],references: [regNo])
-  studentId Int
+  studentId BigInt
   module Module[]
   gpa String
 }
