@@ -27,14 +27,8 @@ model Results{
   id Int @id @default(autoincrement())
   student Student @relation(fields: [studentId],references: [regNo])
   studentId BigInt
-  module Module[]
-  gpa String
-}
-
-model Module{
-  id Int @id @default(autoincrement())
-  student Results @relation(fields: [id],references: [id])
   name String
   code String
   grade String
+  gpa String
 }

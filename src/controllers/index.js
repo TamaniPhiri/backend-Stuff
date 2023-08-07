@@ -49,48 +49,37 @@ exports.getStudents = async (req, res) => {
   }
 };
 
+
 exports.createResult = async (req, res) => {
-  const { studentId, moduleCodes, gpa } = req.body;
+    const { regNo, name, code, grade, gpa } = req.body;
 
-  try {
-    // Find the student
-    const student = await prisma.student.findUnique({
-      where: { regNo: studentId },
-    });
+    try {
+        const student = await prisma.student.findUnique({
+            where: { regNo },
+        });
 
-    if (!student) {
-      return res.status(404).json({ message: "Student not found" });
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        await prisma.results.create({
+            data: {
+                student: {
+                    connect: { regNo },
+                },
+                name,
+                code,
+                grade,
+                gpa,
+            },
+            include: {
+                student: true,
+            },
+        });
+
+        res.status(200).json({ message: "Result created successfully"});
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: error });
     }
-
-    // Find the modules based on the provided codes
-    const modules = await prisma.module.findMany({
-      where: { code: { in: moduleCodes } },
-    });
-
-    if (modules.length !== moduleCodes.length) {
-      return res.status(404).json({ message: "Some modules not found" });
-    }
-
-    // Create a new result
-    const result = await prisma.results.create({
-      data: {
-        student: {
-          connect: { regNo: studentId }, // Connect to the existing student
-        },
-        module: {
-          connect: modules.map((module) => ({ id: module.id })), // Connect to existing modules
-        },
-        gpa,
-      },
-      include: {
-        student: true,
-        module: true,
-      },
-    });
-
-    res.status(200).json({ message: "Result created successfully", result });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: error });
-  }
 };
