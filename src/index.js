@@ -1,19 +1,16 @@
-const express=require('express')
-const bodyParser = require('body-parser');
-const { router } = require('./routes/router');
+const express=require('express');
+const bodyParser=require('body-parser')
 
-const port=8080;
 const app=express();
+const port=8080;
 
-app.use(express.json())
 app.use(bodyParser.json());
-
-app.use('/api',require('./routes/router'))
+app.use(express.json());
+app.use('/',require('./routes/router'));
 
 app.get('/',(req,res)=>{
-    res.json({message:"APi"}).status(200)
+    res.send("API")
 })
-
 
 app.listen(port,()=>{
     console.log(`Listening on http://localhost:${port}`);

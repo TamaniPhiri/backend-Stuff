@@ -10,16 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Student {
-  id      Int      @id @default(autoincrement())
-  regNo   String
+model Student{
+  id Int @id @default(autoincrement())
+  regNo Int @unique
   password String
-  lecture Lecture @relation(fields: [password], references: [studentPassword])
+  results Results[]
 }
 
-model Lecture {
-  id             Int       @id @default(autoincrement())
-  password       String
-  studentPassword String @unique
-  students  Student[]
+model Lecture{
+  id Int @id @default(autoincrement())
+  email String
+  password String
+}
+
+model Results{
+  id Int @id @default(autoincrement())
+  student Student @relation(fields: [studentId],references: [regNo])
+  studentId Int
+  module Module[]
+  gpa String
+}
+
+model Module{
+  id Int @id @default(autoincrement())
+  student Results @relation(fields: [id],references: [id])
+  name String
+  code String
+  grade String
 }
