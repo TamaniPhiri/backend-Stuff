@@ -28,3 +28,13 @@ exports.createStudent = async (req, res) => {
     res.status(400).json({ message: error });
   }
 };
+
+exports.getStudents = async (req, res) => {
+  try {
+    const students = await prisma.student.findMany();
+    res.status(200).json(students);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error });
+  }
+};
