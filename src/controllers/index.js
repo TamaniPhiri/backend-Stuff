@@ -31,7 +31,11 @@ exports.createStudent = async (req, res) => {
 
 exports.getStudents = async (req, res) => {
   try {
-    const students = await prisma.student.findMany();
+    const students = await prisma.student.findMany({
+        orderBy:{
+            regNo:"asc"
+        }
+    });
 
     // Convert BigInt values to strings
     const studentsWithConvertedBigInt = students.map((student) => ({
