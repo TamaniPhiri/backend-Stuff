@@ -32,7 +32,13 @@ exports.createStudent = async (req, res) => {
 exports.getStudents = async (req, res) => {
   try {
     const students = await prisma.student.findMany();
-    res.status(200).json(students);
+
+    // Convert BigInt values to strings
+    const studentsWithConvertedBigInt = students.map((student) => ({
+      ...student,
+      regNo: student.regNo.toString(),
+    }));
+    res.status(200).json(studentsWithConvertedBigInt);
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error });
